@@ -8,18 +8,27 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import java.util.HashMap;
 import java.util.Map;
 
-public class WorldCreator {
+public class WorldCreator{
 
-    private static HashMap<MapName, HashMap<RoomName, String[]>> PATHS_TO_ASSETS;
+    private static HashMap<WorldName, HashMap<RoomName, String[]>> PATHS_TO_ASSETS;
     private static AssetManager manager;
 
-    public void init(){
+    public static void init(){
         manager = new AssetManager();
         manager.setLoader(TiledMap.class, new TmxMapLoader(new InternalFileHandleResolver()));
 
         PATHS_TO_ASSETS = new HashMap<>();
 
         initPathsToAssetNecrophobia();
+    }
+
+    public static boolean isDone(){
+        if (manager.update()){
+            manager.finishLoading();
+            return true;
+        }
+
+        return false;
     }
 
     private static void initPathsToAssetNecrophobia(){
@@ -33,14 +42,10 @@ public class WorldCreator {
             }
         );
 
-        PATHS_TO_ASSETS.put(MapName.NECROPHOBIA, basement);
+        PATHS_TO_ASSETS.put(WorldName.NECROPHOBIA, basement);
     }
 
-    public static HashMap<RoomName, MapRotator> createWorld(MapName name){
-        if (!manager.isLoaded(PATHS_TO_ASSETS.get(name).get(RoomName.BASEMENT)[0])){
-            loadTextureWorld(name); // FIXME: 22.06.2025 это нужно сделать в экране загрузки, так как иначе мы - никак не добьемся асинхронной загрузки
-        }
-
+    public static HashMap<RoomName, MapRotator> createWorld(WorldName name){
         HashMap<RoomName, MapRotator> world = new HashMap<>();
         HashMap<RoomName, String[]> rooms = PATHS_TO_ASSETS.get(name);
 
@@ -59,7 +64,13 @@ public class WorldCreator {
         return world;
     }
 
-    public static void loadTextureWorld(MapName name){
+    public static boolean isLoadTextureWorld(WorldName worldName, RoomName roomName){
+        return manager.isLoaded(PATHS_TO_ASSETS.get(worldName).get(roomName)[0]);
+    }
+
+    public static void loadTextureWorld(WorldName name){
+        if (isLoadTextureWorld(name, RoomName.BASEMENT)) return; // FIXME: 23.06.2025 ХАРДКОД
+
         HashMap<RoomName, String[]> rooms = PATHS_TO_ASSETS.get(name);
 
         for (Map.Entry<RoomName, String[]> paths : rooms.entrySet()) {
@@ -68,5 +79,9 @@ public class WorldCreator {
             }
         }
 
+    }
+
+    public static void dispose(){
+        manager.dispose();
     }
 }

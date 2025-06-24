@@ -7,7 +7,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.run.game.Main;
 import com.run.game.map.MapController;
-import com.run.game.map.MapName;
+import com.run.game.map.WorldName;
 import com.run.game.map.RoomName;
 import com.run.game.map.WorldCreator;
 import com.run.game.ui.UiController;
@@ -25,7 +25,7 @@ public class GameScreen implements Screen {
     private final FitViewport gameViewport;
     private final ScreenViewport uiViewport;
 
-    private final MapController mapController;
+    private MapController mapController;
     private UiController gameMenu;
 
     public GameScreen(Main main, SpriteBatch batch, OrthographicCamera gameCamera, OrthographicCamera uiCamera, FitViewport gameViewport, ScreenViewport uiViewport) {
@@ -35,19 +35,20 @@ public class GameScreen implements Screen {
         this.uiCamera = uiCamera;
         this.gameViewport = gameViewport;
         this.uiViewport = uiViewport;
-
-        mapController = new MapController(batch, gameCamera, WorldCreator.createWorld(MapName.NECROPHOBIA)); // TODO: 17.06.2025 тоже нужен свой ассет менеджер
-        mapController.setCurrentNameLocation(RoomName.BASEMENT); // FIXME: 21.06.2025 в будущем через json
     }
 
     @Override
     public void show() {
         if (gameMenu == null) {
-            if (!UiGraphic.isLoadTexturesForLevelNecrophobia()) {
+            if (!UiGraphic.isLoadTexturesForLevelNecrophobia() || !WorldCreator.isLoadTextureWorld(WorldName.NECROPHOBIA, RoomName.BASEMENT)) {  // FIXME: 23.06.2025 ХАРДКОД
                 UiGraphic.downloadTexturesForLevelNecrophobia();
+                WorldCreator.loadTextureWorld(WorldName.NECROPHOBIA);  // FIXME: 23.06.2025 ХАРДКОД
                 main.setScreen(new LoadingScreen(main, this, batch, uiCamera, uiViewport));
                 return;
             }
+
+            mapController = new MapController(batch, gameCamera, WorldCreator.createWorld(WorldName.NECROPHOBIA));  // FIXME: 23.06.2025 ХАРДКОД
+            mapController.setCurrentNameLocation(RoomName.BASEMENT); // FIXME: 21.06.2025 в будущем через json
 
             gameMenu = new UiController(UiFactory.createGameUiStage(mapController.getCurrentPlace()));
         }

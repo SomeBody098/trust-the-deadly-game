@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.run.game.Main;
+import com.run.game.map.WorldCreator;
 import com.run.game.ui.UiGraphic;
 
 public class LoadingScreen implements Screen {
@@ -56,7 +57,8 @@ public class LoadingScreen implements Screen {
         progressRender.rect(0, 10, progressBarWidth, 10);
         progressRender.end();
 
-        if (UiGraphic.loading()) moveToCurrentScreen();
+
+        if (UiGraphic.isDone() && WorldCreator.isDone()) moveToCurrentScreen();
     }
 
     private void moveToCurrentScreen() {

@@ -3,9 +3,8 @@ package com.run.game.ui;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.utils.Disposable;
 
-public class UiGraphic implements Disposable {
+public class UiGraphic {
 
     private static AssetManager manager;
 
@@ -13,7 +12,7 @@ public class UiGraphic implements Disposable {
         manager = new AssetManager();
     }
 
-    public static boolean loading(){
+    public static boolean isDone(){
         if (manager.update()){
             manager.finishLoading();
             return true;
@@ -24,10 +23,6 @@ public class UiGraphic implements Disposable {
 
     public static float getProgress(){
         return manager.getProgress();
-    }
-
-    public static void finishLoading(){
-        manager.finishLoading();
     }
 
     public static void downloadTexturesForMainMenu(){
@@ -92,8 +87,7 @@ public class UiGraphic implements Disposable {
         return manager.isLoaded("ui/LeftButton/Purple/idel1.png");
     }
 
-    @Override
-    public void dispose() {
+    public static void dispose(){
         manager.dispose();
     }
 }

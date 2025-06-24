@@ -10,11 +10,12 @@ import java.util.LinkedList;
 // turns the world as a circle
 public class MapRotator implements Disposable {
 
-    private LinkedList<MapContainer> tiledMaps; // circle
+    private final LinkedList<MapContainer> tiledMaps; // circle
 
     private int currentIndex;
 
     public MapRotator() {
+        tiledMaps = new LinkedList<>();
         currentIndex = 0;
     }
 

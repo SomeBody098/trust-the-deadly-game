@@ -1,5 +1,5 @@
 package com.run.game.map;
 
-public enum MapName {
+public enum WorldName {
     NECROPHOBIA
 }
