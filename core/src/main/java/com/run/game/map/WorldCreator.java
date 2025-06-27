@@ -1,5 +1,6 @@
 package com.run.game.map;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -31,7 +32,11 @@ public class WorldCreator{
         return false;
     }
 
-    private static void initPathsToAssetNecrophobia(){
+    public static float getProgress(){
+        return manager.getProgress();
+    }
+
+    private static void initPathsToAssetNecrophobia(){ // FIXME: 24.06.2025 перенеси пути в json и из файла и бери эти пути
         HashMap<RoomName, String[]> basement = new HashMap<>();
         basement.put(
             RoomName.BASEMENT,
@@ -68,8 +73,21 @@ public class WorldCreator{
         return manager.isLoaded(PATHS_TO_ASSETS.get(worldName).get(roomName)[0]);
     }
 
+    public static boolean isLoadTextureNecrophobiaWorld(){
+        return isLoadTextureWorld(WorldName.NECROPHOBIA, RoomName.BASEMENT);
+    }
+
+    private static boolean checkingTexturesLoading(WorldName name){
+        switch (name){
+            case NECROPHOBIA:
+                return isLoadTextureNecrophobiaWorld(); // if true - success, Textures been loaded
+        }
+
+        return false; // fail - Textures was not loading
+    }
+
     public static void loadTextureWorld(WorldName name){
-        if (isLoadTextureWorld(name, RoomName.BASEMENT)) return; // FIXME: 23.06.2025 ХАРДКОД
+        if (checkingTexturesLoading(name)) return;
 
         HashMap<RoomName, String[]> rooms = PATHS_TO_ASSETS.get(name);
 

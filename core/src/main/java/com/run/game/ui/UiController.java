@@ -1,6 +1,7 @@
 package com.run.game.ui;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 public class UiController {
@@ -21,6 +22,10 @@ public class UiController {
 
     public void reboot(){
         if (Gdx.input.getInputProcessor() != stage) Gdx.input.setInputProcessor(stage);
+    }
+
+    public void addActor(Actor actor){
+        stage.addActor(actor);
     }
 
     public void dispose(){

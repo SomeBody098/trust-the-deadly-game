@@ -8,7 +8,6 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.run.game.Main;
 import com.run.game.ui.UiController;
 import com.run.game.ui.UiFactory;
-import com.run.game.ui.UiGraphic;
 
 public class MainMenuScreen implements Screen {
 
@@ -36,12 +35,6 @@ public class MainMenuScreen implements Screen {
     @Override
     public void show() {
         if (mainMenu == null) {
-            if (!UiGraphic.isLoadTexturesForMainMenu()) {
-                UiGraphic.downloadTexturesForMainMenu();
-                main.setScreen(new LoadingScreen(main, this, batch, uiCamera, uiViewport));
-                return;
-            }
-
             mainMenu = new UiController(UiFactory.createMainMenuStage(main, new GameScreen(main, batch, gameCamera, uiCamera, gameViewport, uiViewport)));
         }
     }

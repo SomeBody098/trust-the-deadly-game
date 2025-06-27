@@ -1,17 +1,18 @@
 package com.run.game.ui;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.run.game.Main;
 import com.run.game.map.MapRotator;
-import com.run.game.ui.button.CustomButton;
-import com.run.game.ui.button.action.ButtonAction;
 import com.run.game.ui.button.action.ScreenSwitchAction;
 import com.run.game.ui.button.action.TurnCameraAction;
 import com.run.game.utils.exception.NotInitializedObjectException;
@@ -20,14 +21,25 @@ import com.run.game.utils.param.UiParam;
 
 public class UiFactory {
 
+    private static final float GLOBAL_WIGHT = Gdx.graphics.getWidth();
+    private static final float GLOBAL_HEIGHT = Gdx.graphics.getHeight();
+
     private static OrthographicCamera uiCamera;
     private static Viewport viewport;
     private static Batch batch;
+
+    private static Skin skin;
 
     public static void init(OrthographicCamera uiCamera, Viewport viewport, Batch batch){
         UiFactory.uiCamera = uiCamera;
         UiFactory.viewport = viewport;
         UiFactory.batch = batch;
+
+        skin = new Skin();
+        skin.addRegions(new TextureAtlas("ui/style/uiskin.atlas"));
+        skin.load(Gdx.files.internal("assets/ui/style/uiskin.json"));
+
+        skin.setScale(10);
     }
 
     public static Stage createMainMenuStage(Main game, Screen targetScreen){
@@ -43,80 +55,79 @@ public class UiFactory {
 
         gameUi.addActor(createLeftButton(place));
         gameUi.addActor(createRightButton(place));
+        gameUi.addActor(createTextField());
 
         return gameUi;
     }
 
-    private static CustomButton createStartButton(Main game, Screen targetScreen){
+    private static Button createStartButton(Main game, Screen targetScreen){
         isUiCameraInitialized();
-        UiParam param = ParamFactory.getUiParam("start_button");
+        UiParam param = ParamFactory.getUiParam("start-button");
 
-        Animation<Texture> animation = UiGraphic.getIdelAnimationStartButton(param.duration_animation);
-        Texture pressed = UiGraphic.getPressedTextureStartButton();
+        Button button = new Button(skin, "start-button");
+        button.addListener(new ScreenSwitchAction(game, targetScreen));
 
-        Rectangle bounds = createBoundsForUi(param, pressed.getWidth(), pressed.getHeight());
-        ButtonAction action = new ScreenSwitchAction(game, targetScreen);
+        setStandardBoundsForUiObject(button, param);
 
-        return new CustomButton(
-            "start_button",
-            bounds,
-            action,
-            animation,
-            pressed
-        );
+        return button;
     }
 
-    private static CustomButton createRightButton(MapRotator place){
+    private static Button createRightButton(MapRotator place){
         isUiCameraInitialized();
-        UiParam param = ParamFactory.getUiParam("right_button");
+        UiParam param = ParamFactory.getUiParam("right-button");
 
-        Animation<Texture> animation = UiGraphic.getIdelAnimationRightButton(param.duration_animation);
-        Texture pressed = UiGraphic.getPressedTextureRightButton();
+        Button button = new Button(skin, "right-button");
+        button.addListener(new TurnCameraAction((byte) 1, place));
 
-        Rectangle bounds = createBoundsForUi(param, pressed.getWidth(), pressed.getHeight());
-        bounds.x += pressed.getWidth() * 2;
+        float wight = param.wight_percent * button.getWidth();
+        float height = param.height_percent * button.getHeight();
 
-        ButtonAction action = new TurnCameraAction((byte) 1, place);
-
-        return new CustomButton(
-            "right_button",
-            bounds,
-            action,
-            animation,
-            pressed
+        button.setBounds(
+            param.position_x_percent * GLOBAL_WIGHT,
+            param.position_y_percent * GLOBAL_HEIGHT - height / 2,
+            wight, height
         );
+
+        return button;
     }
 
-    private static CustomButton createLeftButton(MapRotator place){
+    private static Button createLeftButton(MapRotator place){
         isUiCameraInitialized();
-        UiParam param = ParamFactory.getUiParam("left_button");
+        UiParam param = ParamFactory.getUiParam("left-button");
 
-        Animation<Texture> animation = UiGraphic.getIdelAnimationLeftButton(param.duration_animation);
-        Texture pressed = UiGraphic.getPressedTextureLeftButton();
+        Button button = new Button(skin, "left-button");
+        button.addListener(new TurnCameraAction((byte) -1, place));
 
-        Rectangle bounds = createBoundsForUi(param, pressed.getWidth(), pressed.getHeight());
-        bounds.x -= pressed.getWidth() * 2;
+        float wight = param.wight_percent * button.getWidth();
+        float height = param.height_percent * button.getHeight();
 
-        ButtonAction action = new TurnCameraAction((byte) -1, place);
-
-        return new CustomButton(
-            "left_button",
-            bounds,
-            action,
-            animation,
-            pressed
+        button.setBounds(
+            param.position_x_percent * GLOBAL_WIGHT - wight,
+            param.position_y_percent * GLOBAL_HEIGHT - height / 2,
+            wight, height
         );
+
+        return button;
     }
 
-    private static Rectangle createBoundsForUi(UiParam param, float wight, float height){
-        float resultWight = wight * param.wight_percent;
-        float resultHeight = height * param.height_percent;
+    private static TextField createTextField(){
+        UiParam param = ParamFactory.getUiParam("text-field");
 
-        return new Rectangle(
-            (uiCamera.viewportWidth * param.position_x_percent) - resultWight / 2,
-            (uiCamera.viewportHeight * param.position_y_percent) - resultHeight / 2,
-            resultWight,
-            resultHeight
+        TextField field = new TextField("", skin, "dialog");
+
+        setStandardBoundsForUiObject(field, param);
+
+        return field;
+    }
+
+    private static void setStandardBoundsForUiObject(Actor uiObject, UiParam param){
+        float wight = param.wight_percent * uiObject.getWidth();
+        float height = param.height_percent * uiObject.getHeight();
+
+        uiObject.setBounds(
+            param.position_x_percent * GLOBAL_WIGHT - wight / 2,
+            param.position_y_percent * GLOBAL_HEIGHT - height / 2,
+            wight, height
         );
     }
 

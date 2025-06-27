@@ -3,7 +3,7 @@ package com.run.game.ui.button.action;
 import com.run.game.map.MapRotator;
 import com.run.game.utils.exception.UnexpectedBehaviorException;
 
-public class TurnCameraAction implements ButtonAction {
+public class TurnCameraAction extends ButtonAction {
 
     private final byte once;
 

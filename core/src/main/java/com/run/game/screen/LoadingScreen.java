@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.run.game.Main;
 import com.run.game.map.WorldCreator;
-import com.run.game.ui.UiGraphic;
 
 public class LoadingScreen implements Screen {
 
@@ -41,7 +40,7 @@ public class LoadingScreen implements Screen {
     @Override
     public void render(float delta) {
         float screenWidth = uiViewport.getScreenWidth();
-        float progress = UiGraphic.getProgress() * 100;
+        float progress = WorldCreator.getProgress() * 100;
 
         // Width of progress bar on screen relevant to Screen width
         float progressBarWidth = (screenWidth / 100) * progress;
@@ -58,7 +57,7 @@ public class LoadingScreen implements Screen {
         progressRender.end();
 
 
-        if (UiGraphic.isDone() && WorldCreator.isDone()) moveToCurrentScreen();
+        if (WorldCreator.isDone()) moveToCurrentScreen();
     }
 
     private void moveToCurrentScreen() {

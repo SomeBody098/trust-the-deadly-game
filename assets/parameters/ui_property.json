@@ -1,25 +1,29 @@
 {
-  "start_button":{
+  "start-button":{
     "position_x_percent": 0.5,
     "position_y_percent": 0.5,
-    "wight_percent": 5.45,
-    "height_percent": 5.45,
-    "duration_animation": 0.5
+    "wight_percent": 3.45,
+    "height_percent": 3.45
   },
 
-  "right_button":{
+  "right-button":{
     "position_x_percent": 0.0,
     "position_y_percent": 0.45,
     "wight_percent": 3.45,
-    "height_percent": 3.45,
-    "duration_animation": 0.5
+    "height_percent": 3.45
   },
 
-  "left_button":{
+  "left-button":{
     "position_x_percent": 1.0,
     "position_y_percent": 0.45,
     "wight_percent": 3.45,
-    "height_percent": 3.45,
-    "duration_animation": 0.5
+    "height_percent": 3.45
+  },
+
+  "text-field":{
+    "position_x_percent": 0.5,
+    "position_y_percent": 0.5,
+    "wight_percent": 1.45,
+    "height_percent": 1.45
   }
 }

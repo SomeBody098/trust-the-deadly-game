@@ -12,7 +12,6 @@ import com.run.game.map.RoomName;
 import com.run.game.map.WorldCreator;
 import com.run.game.ui.UiController;
 import com.run.game.ui.UiFactory;
-import com.run.game.ui.UiGraphic;
 
 public class GameScreen implements Screen {
 
@@ -39,16 +38,15 @@ public class GameScreen implements Screen {
 
     @Override
     public void show() {
-        if (gameMenu == null) {
-            if (!UiGraphic.isLoadTexturesForLevelNecrophobia() || !WorldCreator.isLoadTextureWorld(WorldName.NECROPHOBIA, RoomName.BASEMENT)) {  // FIXME: 23.06.2025 ХАРДКОД
-                UiGraphic.downloadTexturesForLevelNecrophobia();
-                WorldCreator.loadTextureWorld(WorldName.NECROPHOBIA);  // FIXME: 23.06.2025 ХАРДКОД
+        if (gameMenu == null || mapController == null) {
+            if (!WorldCreator.isLoadTextureNecrophobiaWorld()) {
+                WorldCreator.loadTextureWorld(WorldName.NECROPHOBIA);  // FIXME: 23.06.2025 ХАРДКОД - в будущем через json (определение генерации мира)
                 main.setScreen(new LoadingScreen(main, this, batch, uiCamera, uiViewport));
                 return;
             }
 
             mapController = new MapController(batch, gameCamera, WorldCreator.createWorld(WorldName.NECROPHOBIA));  // FIXME: 23.06.2025 ХАРДКОД
-            mapController.setCurrentNameLocation(RoomName.BASEMENT); // FIXME: 21.06.2025 в будущем через json
+            mapController.setCurrentNameLocation(RoomName.BASEMENT); // FIXME: 21.06.2025 ХАРДКОД - в будущем через json (определение текущей локации)
 
             gameMenu = new UiController(UiFactory.createGameUiStage(mapController.getCurrentPlace()));
         }

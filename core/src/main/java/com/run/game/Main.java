@@ -10,7 +10,6 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.run.game.map.WorldCreator;
 import com.run.game.screen.MainMenuScreen;
 import com.run.game.ui.UiFactory;
-import com.run.game.ui.UiGraphic;
 import com.run.game.utils.exception.NotInitializedObjectException;
 
 public class Main extends Game {
@@ -63,7 +62,6 @@ public class Main extends Game {
     }
 
     private void init(){
-        UiGraphic.init();
         WorldCreator.init();
         UiFactory.init(uiCamera, uiViewport, batch);
     }
@@ -76,7 +74,6 @@ public class Main extends Game {
 
     @Override
     public void dispose() {
-        UiGraphic.dispose(); // FIXME: 23.06.2025 ПЕРЕСМОТРИ
         WorldCreator.dispose();  // FIXME: 23.06.2025 ПЕРЕСМОТРИ
         batch.dispose();
     }

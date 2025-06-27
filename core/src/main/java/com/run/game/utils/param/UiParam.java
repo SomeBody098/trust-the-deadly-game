@@ -5,7 +5,6 @@ public class UiParam implements Param {
     public float position_y_percent;
     public float wight_percent;
     public float height_percent;
-    public float duration_animation;
 
     public UiParam(float position_x_percent, float position_y_percent, float wight_percent, float height_percent) {
         this.position_x_percent = position_x_percent;

@@ -22,7 +22,6 @@ public class CustomButton extends Actor {
     private Texture currentFrame;
 
     private boolean isTouched;
-    private boolean isPressed;
 
     private float stateTime;
 
@@ -34,6 +33,8 @@ public class CustomButton extends Actor {
         this.pressedTexture = pressedTexture;
 
         addListener(new InputListener(){
+            private boolean isPressed;
+
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 isPressed = true;
@@ -58,7 +59,7 @@ public class CustomButton extends Actor {
     @Override
     public void act(float delta) {
         if (!isTouched) {
-            currentFrame = idelAnimation.getKeyFrame(stateTime, true);
+            currentFrame = idelAnimation.getKeyFrame(stateTime);
             stateTime += delta;
         }
 
