@@ -24,10 +24,6 @@ public class UiController {
         if (Gdx.input.getInputProcessor() != stage) Gdx.input.setInputProcessor(stage);
     }
 
-    public void addActor(Actor actor){
-        stage.addActor(actor);
-    }
-
     public void dispose(){
         stage.dispose();
     }

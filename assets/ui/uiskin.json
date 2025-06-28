@@ -2,15 +2,18 @@
   com.badlogic.gdx.graphics.Color: {
     white: { r: 1, g: 1, b: 1, a: 1 },
     red: { r: 1, g: 0, b: 0, a: 1 },
-    yellow: { r: 0.5, g: 0.5, b: 0, a: 1 }
+    blood: { r: 0.5, g: 0, b: 0, a: 1 },
+    yellow: { r: 0.5, g: 0.5, b: 0, a: 1 },
+    green: { r: 0, g: 1, b: 0, a: 1 }
   },
   com.badlogic.gdx.graphics.g2d.BitmapFont: {
-    medium: { file: default.fnt }
+    a-starry: { file: fronts/a-starry/AStarry-standard.fnt }
+
   },
 
   com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {
     dialog: {
-      font: medium,
+      font: a-starry,
       fontColor: white,
       cursor: cursor,
       selection: selection,
@@ -34,6 +37,13 @@
       up: left-button-up,
       down: left-button-pressed,
       checked: left-button-checked
+    }
+  }
+
+  com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
+    name-game-label: {
+      font: a-starry,
+      fontColor: white
     }
   }
 

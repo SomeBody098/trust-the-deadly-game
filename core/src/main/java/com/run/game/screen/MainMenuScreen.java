@@ -2,6 +2,7 @@ package com.run.game.screen;
 
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -35,7 +36,20 @@ public class MainMenuScreen implements Screen {
     @Override
     public void show() {
         if (mainMenu == null) {
-            mainMenu = new UiController(UiFactory.createMainMenuStage(main, new GameScreen(main, batch, gameCamera, uiCamera, gameViewport, uiViewport)));
+            GameScreen target = new GameScreen(main,
+                batch,
+                gameCamera,
+                uiCamera,
+                gameViewport,
+                uiViewport
+            );
+
+            mainMenu = new UiController(
+                UiFactory.createMainMenuStage(
+                    main, target
+                )
+            );
+
         }
     }
 

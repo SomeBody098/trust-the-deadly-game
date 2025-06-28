@@ -36,6 +36,25 @@ public class ParamFactory {
         return param;
     }
 
+    public static UiLabelParam getUiLabelParam(String uiName) {
+        if (LATE_PARAM.containsKey(uiName)) return (UiLabelParam) LATE_PARAM.get(uiName);
+
+        JsonValue uiValue = getJsonValue(uiName, "ui");
+
+        UiLabelParam param = new UiLabelParam(
+            uiValue.getFloat("position_x_percent"),
+            uiValue.getFloat("position_y_percent"),
+            uiValue.getFloat("wight_percent"),
+            uiValue.getFloat("height_percent"),
+            uiValue.getString("text")
+        );
+
+        LATE_PARAM.put(uiName, param);
+
+        return param;
+    }
+
+
     public static EntityParam getEntityParam(String entityName){
         if (LATE_PARAM.containsKey(entityName)) return (EntityParam) LATE_PARAM.get(entityName);
 

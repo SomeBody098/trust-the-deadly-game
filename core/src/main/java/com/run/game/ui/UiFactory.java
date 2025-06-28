@@ -8,8 +8,10 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.run.game.Main;
 import com.run.game.map.MapRotator;
@@ -17,6 +19,7 @@ import com.run.game.ui.button.action.ScreenSwitchAction;
 import com.run.game.ui.button.action.TurnCameraAction;
 import com.run.game.utils.exception.NotInitializedObjectException;
 import com.run.game.utils.param.ParamFactory;
+import com.run.game.utils.param.UiLabelParam;
 import com.run.game.utils.param.UiParam;
 
 public class UiFactory {
@@ -36,16 +39,15 @@ public class UiFactory {
         UiFactory.batch = batch;
 
         skin = new Skin();
-        skin.addRegions(new TextureAtlas("ui/style/uiskin.atlas"));
-        skin.load(Gdx.files.internal("assets/ui/style/uiskin.json"));
-
-        skin.setScale(10);
+        skin.addRegions(new TextureAtlas("ui/uiskin.atlas"));
+        skin.load(Gdx.files.internal("ui/uiskin.json"));
     }
 
     public static Stage createMainMenuStage(Main game, Screen targetScreen){
         Stage mainMenu = new Stage(viewport, batch);
 
         mainMenu.addActor(createStartButton(game, targetScreen));
+        mainMenu.addActor(createLabel());
 
         return mainMenu;
     }
@@ -112,12 +114,21 @@ public class UiFactory {
 
     private static TextField createTextField(){
         UiParam param = ParamFactory.getUiParam("text-field");
-
         TextField field = new TextField("", skin, "dialog");
 
         setStandardBoundsForUiObject(field, param);
 
         return field;
+    }
+
+    private static Label createLabel(){
+        UiLabelParam param = ParamFactory.getUiLabelParam("name-game-label");
+        Label label = new Label(param.text, skin, "name-game-label");
+
+        label.setAlignment(Align.center);
+        setStandardBoundsForUiObject(label, param);
+
+        return label;
     }
 
     private static void setStandardBoundsForUiObject(Actor uiObject, UiParam param){
