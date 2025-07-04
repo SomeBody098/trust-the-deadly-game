@@ -14,13 +14,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.run.game.Main;
+import com.run.game.entity.Npc;
 import com.run.game.map.MapRotator;
-import com.run.game.ui.button.action.ScreenSwitchAction;
-import com.run.game.ui.button.action.TurnCameraAction;
+import com.run.game.ui.action.ScreenSwitchAction;
+import com.run.game.ui.action.TurnCameraAction;
 import com.run.game.utils.exception.NotInitializedObjectException;
 import com.run.game.utils.param.ParamFactory;
 import com.run.game.utils.param.UiLabelParam;
 import com.run.game.utils.param.UiParam;
+
+import java.text.ParseException;
 
 public class UiFactory {
 
@@ -52,12 +55,12 @@ public class UiFactory {
         return mainMenu;
     }
 
-    public static Stage createGameUiStage(MapRotator place){
+    public static Stage createGameUiStage(MapRotator place, Npc npc){
         Stage gameUi = new Stage(viewport, batch);
 
         gameUi.addActor(createLeftButton(place));
         gameUi.addActor(createRightButton(place));
-        gameUi.addActor(createTextField());
+        gameUi.addActor(createTextField(npc)); // FIXME: 04.07.2025 вместо NPC должен быть DTO
 
         return gameUi;
     }
@@ -112,9 +115,26 @@ public class UiFactory {
         return button;
     }
 
-    private static TextField createTextField(){
+    private static TextField createTextField(Npc npc){
         UiParam param = ParamFactory.getUiParam("text-field");
         TextField field = new TextField("", skin, "dialog");
+
+        field.setFocusTraversal(false);
+        field.setTextFieldListener(new TextField.TextFieldListener() {
+            @Override
+            public void keyTyped(TextField textField, char key) {
+                if ((key == '\r' || key == '\n')){
+                    String args = textField.getText();
+                    textField.setText("");
+
+                    try {
+                        npc.giveRequest(args);
+                    } catch (ParseException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        });
 
         setStandardBoundsForUiObject(field, param);
 

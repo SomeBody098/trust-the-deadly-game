@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.run.game.Main;
+import com.run.game.entity.Npc;
 import com.run.game.map.MapController;
 import com.run.game.map.WorldName;
 import com.run.game.map.RoomName;
@@ -26,6 +27,8 @@ public class GameScreen implements Screen {
 
     private MapController mapController;
     private UiController gameMenu;
+
+    private Npc npc = new Npc(); // FIXME: 04.07.2025 ВРЕМЕННО!
 
     public GameScreen(Main main, SpriteBatch batch, OrthographicCamera gameCamera, OrthographicCamera uiCamera, FitViewport gameViewport, ScreenViewport uiViewport) {
         this.main = main;
@@ -48,7 +51,7 @@ public class GameScreen implements Screen {
             mapController = new MapController(batch, gameCamera, WorldCreator.createWorld(WorldName.NECROPHOBIA));  // FIXME: 23.06.2025 ХАРДКОД
             mapController.setCurrentNameLocation(RoomName.BASEMENT); // FIXME: 21.06.2025 ХАРДКОД - в будущем через json (определение текущей локации)
 
-            gameMenu = new UiController(UiFactory.createGameUiStage(mapController.getCurrentPlace()));
+            gameMenu = new UiController(UiFactory.createGameUiStage(mapController.getCurrentPlace(), npc));
         }
     }
 

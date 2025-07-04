@@ -1,9 +1,9 @@
-package com.run.game.ui.button.action;
+package com.run.game.ui.action;
 
 import com.badlogic.gdx.Screen;
 import com.run.game.Main;
 
-public class ScreenSwitchAction extends ButtonAction{
+public class ScreenSwitchAction extends UiAction {
 
     private final Main main;
     private final Screen targetScreen;

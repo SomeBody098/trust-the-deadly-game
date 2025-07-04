@@ -1,9 +1,9 @@
-package com.run.game.ui.button.action;
+package com.run.game.ui.action;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
-public abstract class ButtonAction extends ClickListener {
+public abstract class UiAction extends ClickListener {
 
     public abstract void execute();
 

@@ -23,8 +23,8 @@
   "text-field":{
     "position_x_percent": 0.5,
     "position_y_percent": 0.5,
-    "wight_percent": 5.45,
-    "height_percent": 5.45
+    "wight_percent": 3,
+    "height_percent": 1
   },
 
   "name-game-label": {
