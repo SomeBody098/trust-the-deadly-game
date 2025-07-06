@@ -2,22 +2,16 @@ package com.run.game;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Net;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.net.HttpRequestBuilder;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.run.game.map.WorldCreator;
 import com.run.game.screen.MainMenuScreen;
 import com.run.game.ui.UiFactory;
-import com.run.game.utils.exception.FailedConnectionException;
 import com.run.game.utils.exception.NotInitializedObjectException;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import com.run.game.utils.net.NetManager;
 
 public class Main extends Game {
 
@@ -30,7 +24,7 @@ public class Main extends Game {
 
     @Override
     public void create() {
-        checkConnectionWithServer();
+        NetManager.checkConnectionWithServer();
 
         batch = new SpriteBatch();
         createCameras();
@@ -73,32 +67,6 @@ public class Main extends Game {
     private void init(){
         WorldCreator.init();
         UiFactory.init(uiCamera, uiViewport, batch);
-    }
-
-    private void checkConnectionWithServer(){
-        HttpRequestBuilder requestBuilder = new HttpRequestBuilder(); // FIXME: 30.06.2025 начало: вот эта часть должна блокировать (выдавать FailedConnectionException), если к серверу с AI нельзя подключиться
-        Net.HttpRequest httpRequest = requestBuilder.newRequest().method(Net.HttpMethods.GET).url("http://localhost:8080/test").build(); // FIXME: 30.06.2025 обязательно путь к серверу передавай через json файл сюда, этот json в git - не клади!!!
-
-        Net.HttpResponseListener httpResponseListener = new Net.HttpResponseListener() {
-            @Override
-            public void handleHttpResponse(Net.HttpResponse httpResponse) {
-                Gdx.app.log("response", httpResponse.getResultAsString());
-            }
-
-            @Override
-            public void failed(Throwable t) {
-                Gdx.app.error("Failed connect", "Cannot connecting to server", t);
-                throw new FailedConnectionException(t);
-            }
-
-            @Override
-            public void cancelled() {
-                Gdx.app.error("Cancelled", "Server canceled the request");
-                throw new FailedConnectionException();
-            }
-        };
-
-        Gdx.net.sendHttpRequest(httpRequest, httpResponseListener); // FIXME: 30.06.2025 конец
     }
 
     @Override

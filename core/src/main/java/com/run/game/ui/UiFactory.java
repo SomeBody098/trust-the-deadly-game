@@ -14,11 +14,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.run.game.Main;
-import com.run.game.entity.Npc;
 import com.run.game.map.MapRotator;
 import com.run.game.ui.action.ScreenSwitchAction;
 import com.run.game.ui.action.TurnCameraAction;
 import com.run.game.utils.exception.NotInitializedObjectException;
+import com.run.game.utils.net.NetManager;
 import com.run.game.utils.param.ParamFactory;
 import com.run.game.utils.param.UiLabelParam;
 import com.run.game.utils.param.UiParam;
@@ -55,12 +55,12 @@ public class UiFactory {
         return mainMenu;
     }
 
-    public static Stage createGameUiStage(MapRotator place, Npc npc){
+    public static Stage createGameUiStage(MapRotator place){
         Stage gameUi = new Stage(viewport, batch);
 
         gameUi.addActor(createLeftButton(place));
         gameUi.addActor(createRightButton(place));
-        gameUi.addActor(createTextField(npc)); // FIXME: 04.07.2025 вместо NPC должен быть DTO
+        gameUi.addActor(createTextField());
 
         return gameUi;
     }
@@ -115,7 +115,7 @@ public class UiFactory {
         return button;
     }
 
-    private static TextField createTextField(Npc npc){
+    private static TextField createTextField(){
         UiParam param = ParamFactory.getUiParam("text-field");
         TextField field = new TextField("", skin, "dialog");
 
@@ -128,7 +128,7 @@ public class UiFactory {
                     textField.setText("");
 
                     try {
-                        npc.giveRequest(args);
+                        NetManager.giveRequestNpc(args);
                     } catch (ParseException e) {
                         throw new RuntimeException(e);
                     }

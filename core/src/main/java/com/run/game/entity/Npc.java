@@ -1,67 +1,36 @@
 package com.run.game.entity;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Net;
-import com.badlogic.gdx.net.HttpRequestBuilder;
-import com.run.game.utils.exception.FailedConnectionException;
+public class Npc implements Entity { // TODO: 06.07.2025 сделать для Npc свой Param
 
-import java.text.ParseException;
+    public static byte MAX_LOYALTY = 10;
+    public static byte MAX_SADNESS = 10;
+    public static byte MAX_ANGER = 10;
 
-public class Npc implements Entity{
+    private byte loyalty = 0;
+    private byte sadness = 0;
+    private byte anger = 0;
+    private String response;
 
-    private final static String URL = "http://localhost:8080"; // FIXME: 30.06.2025 обязательно путь к серверу передавай через json файл сюда, этот json в git - не клади!!!
 
-    private final Net.HttpResponseListener httpResponseListener;
 
-    private boolean isWaitResponse = false;
 
-    public Npc() {
-        httpResponseListener = new Net.HttpResponseListener() {
-            @Override
-            public void handleHttpResponse(Net.HttpResponse httpResponse) {
-                isWaitResponse = true;
-
-                Gdx.app.log("request", "Npc been give request to server...");
-                Gdx.app.postRunnable(new Runnable() {
-                    @Override
-                    public void run() {
-                        String response = httpResponse.getResultAsString();
-                        while (response.isEmpty()) {
-                            // FIXME: 04.07.2025 ИГРА ТУТ В ЛОВУШКЕ! - ПОФИКСИ ЭТО (чтобы метод "ждал" пока сервер не даст ему ответ)
-                        }
-
-                        Gdx.app.log("response", "Npc been take response to server! The response: " + response);
-                    }
-                });
-            }
-
-            @Override
-            public void failed(Throwable t) {
-                Gdx.app.error("Failed connect", "Cannot connecting to server", t);
-                isWaitResponse = false;
-                throw new FailedConnectionException(t);
-            }
-
-            @Override
-            public void cancelled() {
-                Gdx.app.error("Cancelled", "Server canceled the request");
-                isWaitResponse = false;
-                throw new FailedConnectionException();
-            }
-        };
+    public String getResponse(){
+        return response;
     }
 
-    public void giveRequest(String args) throws ParseException {
-        if (isWaitResponse) return;
-
-        if (args.contains("/")) throw new ParseException("Symbols '/' - is forbidden use.", 128);
-
-        HttpRequestBuilder requestBuilder = new HttpRequestBuilder();
-        Net.HttpRequest httpRequest = requestBuilder.newRequest().method(Net.HttpMethods.POST).url(URL + "/response/" + args).build();
-
-        Gdx.net.sendHttpRequest(httpRequest, httpResponseListener);
-
-        // FIXME: 04.07.2025 придумай - как заставить LibGDX ждать ответа от сервера
+    public void setResponse(String response) {
+        this.response = response;
     }
 
+    public byte getLoyalty() {
+        return loyalty;
+    }
+
+    public byte getSadness() {
+        return sadness;
+    }
+
+    public byte getAnger() {
+        return anger;
+    }
 }
