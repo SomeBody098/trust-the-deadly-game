@@ -4,23 +4,24 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.run.game.utils.exception.UnexpectedBehaviorException;
+import com.run.game.utils.net.Language;
 
 public class ParamFactory {
 
     private static final ObjectMap<String, JsonValue> DATA_STORAGE;
-    private static final ObjectMap<String, Param> LATE_PARAM;
+    private static Language language = Language.ENGLISH;
 
     static {
         DATA_STORAGE = new ObjectMap<>();
-        LATE_PARAM = new ObjectMap<>();
         JsonReader reader = new JsonReader();
 
         DATA_STORAGE.put("ui", reader.parse(Gdx.files.internal("parameters/ui_property.json")));
-        DATA_STORAGE.put("entity", reader.parse(Gdx.files.internal("parameters/entity_property.json")));
+        DATA_STORAGE.put("entity", reader.parse(Gdx.files.internal("parameters/npc_property.json")));
     }
 
     public static UiParam getUiParam(String uiName) {
-        if (LATE_PARAM.containsKey(uiName)) return (UiParam) LATE_PARAM.get(uiName);
+        if (ParamLate.contains(uiName)) return (UiParam) ParamLate.getParam(uiName);
 
         JsonValue uiValue = getJsonValue(uiName, "ui");
 
@@ -31,13 +32,13 @@ public class ParamFactory {
             uiValue.getFloat("height_percent")
         );
 
-        LATE_PARAM.put(uiName, param);
+        ParamLate.putParam(uiName, param);
 
         return param;
     }
 
-    public static UiLabelParam getUiLabelParam(String uiName) {
-        if (LATE_PARAM.containsKey(uiName)) return (UiLabelParam) LATE_PARAM.get(uiName);
+    public static UiLabelParam getUiLabelParam(String uiName) { // FIXME: 07.07.2025 идентичен getUiParam! Придумай как не копировать код
+        if (ParamLate.contains(uiName)) return (UiLabelParam) ParamLate.getParam(uiName);
 
         JsonValue uiValue = getJsonValue(uiName, "ui");
 
@@ -49,28 +50,43 @@ public class ParamFactory {
             uiValue.getString("text")
         );
 
-        LATE_PARAM.put(uiName, param);
+        ParamLate.putParam(uiName, param);
 
         return param;
     }
 
 
-    public static EntityParam getEntityParam(String entityName){
-        if (LATE_PARAM.containsKey(entityName)) return (EntityParam) LATE_PARAM.get(entityName);
+    public static NpcParam getNpcParam(String npcName){
+        if (ParamLate.contains(npcName)) return (NpcParam) ParamLate.getParam(npcName);
 
-        JsonValue uiValue = getJsonValue(entityName, "entity");
+        JsonValue value = getJsonValue(npcName, "entity");
 
-        // TODO: 08.06.2025 в будущем реализуй...
+        NpcParam param = new NpcParam(
+            value.getString("name"),
+            language == Language.RUSSIAN ? value.getString("backstory_ru") : value.getString("backstory_en"),
+            value.getByte("MAX_LOYALTY"),
+            value.getByte("MAX_SADNESS"),
+            value.getByte("MAX_ANGER"),
+            value.getByte("initial_loyalty"),
+            value.getByte("initial_sadness"),
+            value.getByte("initial_anger")
+        );
 
-        return null;
+        ParamLate.putParam(npcName, param);
+
+        return param;
     }
 
     private static JsonValue getJsonValue(String nameObject, String nameJson){
-        if (!DATA_STORAGE.containsKey(nameJson)) throw new IllegalArgumentException("Unknown name Json file: " + nameJson);
+        if (!DATA_STORAGE.containsKey(nameJson)) throw new IllegalArgumentException("Unknown name Json file: " + nameJson + ".");
         JsonValue root = DATA_STORAGE.get(nameJson);
 
-        if (!root.has(nameObject)) throw new IllegalArgumentException("Unknown name object in Json file: " + nameObject);
+        if (!root.has(nameObject)) throw new IllegalArgumentException("Unknown name object in Json file: " + nameObject + ".");
 
         return root.get(nameObject);
+    }
+
+    public static void setLanguage(Language language) {
+        ParamFactory.language = language;
     }
 }

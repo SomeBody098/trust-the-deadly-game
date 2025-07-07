@@ -11,7 +11,9 @@ import com.run.game.map.WorldCreator;
 import com.run.game.screen.MainMenuScreen;
 import com.run.game.ui.UiFactory;
 import com.run.game.utils.exception.NotInitializedObjectException;
+import com.run.game.utils.net.Language;
 import com.run.game.utils.net.NetManager;
+import com.run.game.utils.param.ParamFactory;
 
 public class Main extends Game {
 
@@ -25,6 +27,8 @@ public class Main extends Game {
     @Override
     public void create() {
         NetManager.checkConnectionWithServer();
+        NetManager.setLanguage(Language.RUSSIAN); // FIXME: 07.07.2025 он должен менять язык в зависимости от геолокации игрока!
+        ParamFactory.setLanguage(Language.RUSSIAN); // FIXME: 07.07.2025 он должен менять язык в зависимости от геолокации игрока!
 
         batch = new SpriteBatch();
         createCameras();

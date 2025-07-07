@@ -8,12 +8,12 @@
   },
   com.badlogic.gdx.graphics.g2d.BitmapFont: {
     a-starry: { file: fronts/a-starry/AStarry-standard.fnt }
-
+    bitter: {file: fronts/bitter/Bitter-standard.fnt}
   },
 
   com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {
     dialog: {
-      font: a-starry,
+      font: bitter,
       fontColor: white,
       cursor: cursor,
       selection: selection,
@@ -42,7 +42,7 @@
 
   com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
     name-game-label: {
-      font: a-starry,
+      font: bitter,
       fontColor: white
     }
   }
